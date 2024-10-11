@@ -44,6 +44,7 @@ while readin:
 
 src.close()
 
+#Line size capping
 max = 0
 for i,j in letters.items():
     if j > max:
@@ -57,20 +58,22 @@ if max > 100:
         perced[i] = perc
 
 
-#Create histogram
-def hist(list, dict, chr):
-    for item in list:
-        if item in dict.keys():
+#Create histogram: list of keys, dictionary for keys
+def hist(keys, dict, chr):
+    for k in keys:
+        if k in dict.keys():
             continue
         else:
             print("dictionary and list do not match")
             return
     display = ""
-    for x in list:
+    for x in keys:
+        display += x + x.upper() + ' |' + str(dict[x]) + " "
+        if dict[x] < 10:
+            display += ' '
         if dict[x] < 100:
-            display += x + x.upper() + ' |' + str(dict[x]) + "  |"
-        else:
-            display += x + x.upper() + ' |' + str(dict[x]) + " |"
+            display += ' '
+        display += "|"
 
         for y in range(dict[x]):
             display += chr
@@ -78,22 +81,6 @@ def hist(list, dict, chr):
     
     return display
 
-#Alphabetical sort
-#freq = []
-#for i,j in letters.items():
-    freq.append(i + i.upper() + " -> " + str(j))
-
-#bprint(freq)
-#for x in sorted(freq):
-#    print(x)
-
-
-
-#print actual histogram
-#if perced:
-#    print(hist(perced.keys(), perced, '-'))
-#else:
-#    print(hist(letters.keys(), letters, '-'))
 
 #numerical sort
 def freqSort(dict, order = 0):
@@ -135,7 +122,35 @@ def freqSort(dict, order = 0):
     bprint(num_freq)
     return num_freq
 
+
+#Alphabetical sort
+freq = []
+freq = [x for x in letters.keys()]
+
+freq.sort() #Sort in descending letter order
+for j in freq:
+    if perced:
+        print(j + " -> " + str(perced[j]))
+    else:
+        print(j + " -> " + str(letters[j]))
+
+#Sort in descending number order
 if perced:
-    print(hist(freqSort(perced, 1), perced, '#'))
+    freq.sort(key=lambda a: perced[a])
 else:
-    print(hist(freqSort(letters, 1), letters, '#'))
+    freq.sort(key=lambda a: letters[a])
+
+
+#bprint(freq)
+#for x in sorted(freq):
+#    print(x)
+
+if perced:
+    freq.sort(reverse=True, key=lambda a: perced[a])
+else:
+    freq.sort(reverse=True, key=lambda a: letters[a])
+
+if perced:
+    print(hist(freq, perced, '#'))
+else:
+    print(hist(freq, letters, '#'))
